@@ -1,0 +1,15 @@
+package StepDefinition;
+
+import io.cucumber.java.Before;
+
+public class Hooks {
+
+	@Before
+	public void beforeScenrio() throws Throwable
+	{
+		MapsStepDefinition m= new MapsStepDefinition();
+		m.the_body_for_addingPlace_with("Pooja", "Marati", "Belagavi");
+		
+	}
+	
+}

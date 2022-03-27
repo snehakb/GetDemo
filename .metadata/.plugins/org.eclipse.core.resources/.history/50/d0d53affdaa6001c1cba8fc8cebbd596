@@ -1,0 +1,16 @@
+package Resources;
+
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
+
+public class Utils {
+	RequestSpecification request;
+	
+	public RequestSpecification RequestMethod()
+	{
+		 request =new RequestSpecBuilder().setBasePath("https://rahulshettyacademy.com")
+				.addQueryParam("key", "qaclick123").addHeader("Content-Type", "application/json").build();
+		 return request;
+	}
+
+}

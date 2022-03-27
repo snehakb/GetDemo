@@ -1,0 +1,4 @@
+Feature: Validation Maps API
+
+Scenario: Validate the wheather add place api is adding the place
+Giv

@@ -1,0 +1,29 @@
+package StepDefinition;
+
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+public class MapsStepDefinition {
+	@Given("^the body for addingPlace$")
+    public void the_body_for_addingplace() throws Throwable {
+        
+    }
+
+    @When("^User send the \"([^\"]*)\" from \"([^\"]*)\" method$")
+    public void user_send_the_something_from_something_method(String strArg1, String strArg2) throws Throwable {
+        
+    }
+
+    @Then("^Place will be created and status will be 200$")
+    public void place_will_be_created_and_status_will_be_200() throws Throwable {
+
+    }
+
+    @And("^\"([^\"]*)\" in response will be \"([^\"]*)\"$")
+    public void something_in_response_will_be_something(String strArg1, String strArg2) throws Throwable {
+       
+    }
+
+}

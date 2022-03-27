@@ -1,0 +1,14 @@
+Feature: Validation Maps API
+
+Scenario Outline: Validate the wheather add place api is adding the place
+Given the body for addingPlace with "<name>" "<Language>" "<address>"
+When User send the "AddPlaceApi" from "Post" method
+Then Place will be created and status will be 200
+And "Status" in response will be "OK"
+And "scope" in response will be "APP"
+
+Examples: 
+       |name|Language|address|
+       |Abhi|Kannada|Dharwad|
+       |Sneha|English|Hubli|
+       |Pooja|Hindi|Belagavi|

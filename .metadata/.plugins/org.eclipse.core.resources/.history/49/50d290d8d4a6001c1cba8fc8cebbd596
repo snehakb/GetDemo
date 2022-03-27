@@ -1,0 +1,26 @@
+package Resources;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TestBuildData {
+	
+	PojoMaps.PojoMapsClass m= new PojoMaps.PojoMapsClass();
+	m.setAccuracy("50");
+	m.setAddress("Karnataka");
+	m.setLanguage("Kannada");
+	m.setName("abhi");
+	m.setPhone_number("99877767789");
+	m.setWebsite("www.google.com");
+	List<String> typelist= new ArrayList<String>();
+	typelist.add("shoe park");
+	typelist.add("shoe");
+	m.setTypes(typelist);
+	
+	PojoMaps.PojoLocationBody lb= new PojoMaps.PojoLocationBody();
+	lb.setLat(-38.897);
+	lb.setLng(32.7865);
+	
+	m.setLocation(lb);
+
+}

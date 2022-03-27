@@ -1,0 +1,44 @@
+package jiraAPi;
+
+import io.restassured.RestAssured;
+import io.restassured.filter.session.SessionFilter;
+import io.restassured.path.json.JsonPath;
+
+import static io.restassured.RestAssured.*;
+
+public class JiraApi {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		//For login, and creating the session ID
+		
+		//for storing the session id we use the sessionfilter class
+		SessionFilter session =new SessionFilter();
+		String resp=RestAssured.baseURI="http://localhost:8080";
+		given().log().all().header("Content-Type", "application/json")
+		.body("{\"username\":\"kbsneha71\", \"password\":\"2742583Sn@\"}").filter(session)
+		.when().post("/rest/auth/1/session").then().extract().response().asString();
+		
+		
+		
+		//For Creating the bug.
+		String createBugRes=given().header("Content-Type", "application/json").filter(session)
+		.cookie("Cookie", "").body("{\r\n"
+				+ "    \"fields\": {\r\n"
+				+ "        \"project\":\r\n"
+				+ "        {\r\n"
+				+ "            \"key\": \"RES\"\r\n"
+				+ "        },\r\n"
+				+ "        \"summary\": \"creating the bug for jira from postman\",\r\n"
+				+ "        \"description\": \"API for ex of session based login\",\r\n"
+				+ "        \"issuetype\":{\r\n"
+				+ "            \"name\": \"Bug\"\r\n"
+				+ "        }\r\n"
+				+ "    }\r\n"
+				+ "}").when().post("/rest/api/2/issue/")
+		 .then().log().all().assertThat().statusCode(201).extract().response().asString();
+
+	}
+
+}

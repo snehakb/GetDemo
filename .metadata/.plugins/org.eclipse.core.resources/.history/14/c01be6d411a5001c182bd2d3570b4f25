@@ -1,0 +1,17 @@
+package jiraAPi;
+
+import io.restassured.RestAssured;
+import static io.restassured.RestAssured.*;
+
+public class JiraApi {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		RestAssured.baseURI="http://localhost:8080";
+		given().log().all().header("Content-Type", "application/json")
+		.body("{\"username\":\"kbsneha71\", \"password\":\"2742583Sn@\"}")
+
+	}
+
+}

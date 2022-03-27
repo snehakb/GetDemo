@@ -1,0 +1,70 @@
+package jiraAPi;
+
+import static io.restassured.RestAssured.given;
+
+import java.io.File;
+
+import org.testng.Assert;
+
+import files.payload;
+import io.restassured.RestAssured;
+import io.restassured.filter.session.SessionFilter;
+import io.restassured.path.json.JsonPath;
+
+public class AttachmentMultiPart {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		//For login, and creating the session ID
+		
+				//for storing the session id we use the sessionfilter class
+				SessionFilter session =new SessionFilter();
+				String resp=RestAssured.baseURI="http://localhost:8080";
+				given().log().all().header("Content-Type", "application/json")
+				.body("{\"username\":\"kbsneha71\", \"password\":\"2742583Sn@\"}").filter(session)
+				.when().post("/rest/auth/1/session").then().extract().response().asString();
+				
+				//For Creating the bug.
+				String createBug= "Adding the bug from Api Automation";
+				String createBugRes=given().header("Content-Type", "application/json").filter(session)
+				.cookie("Cookie", "").body(payload.createBug(createBug))
+				.when().post("/rest/api/2/issue/")
+				 .then().log().all().assertThat().statusCode(201).extract().response().asString();
+				
+				JsonPath js= new JsonPath(createBugRes);
+				int id=js.getInt("id");
+				
+				
+		//Adding the attachment using Multipart
+				
+		given().header("X-Atlassian-Token", "no-check")
+		.filter(session).header("Content-Type", "multipart/form-data")
+		.pathParam("bugid", id).multiPart("file", new File("Multipartfile.txt"))
+		.when().post("/rest/api/2/issue/{bugid}/attachments")
+		.then().assertThat().statusCode(200);
+				
+				
+//				add comment
+//For adding the comment we need to give the specific bug number, so need to use path parameter
+				
+				String comment= "Adding the comment from eclipse";
+			String addCommentResp=	given().log().all().header("Content-Type","application/json").filter(session)
+				.pathParam("key", id)
+				.body("{\r\n"
+						+ "    \"body\": \""+comment+"\",\r\n"
+						+ "    \"visibility\": {\r\n"
+						+ "        \"type\": \"role\",\r\n"
+						+ "        \"value\": \"Administrators\"\r\n"
+						+ "    }\r\n"
+						+ "}").when().post("/rest/api/2/issue/{key}/comment")   //adding the path parameter in resourse url
+				.then().log().all().extract().response().asString();
+			
+			JsonPath addCommJS= new JsonPath(addCommentResp);
+			String addedComment=addCommJS.getString("body");
+			int commentID= addCommJS.getInt("id");   //it helps for Updateing the comment
+			System.out.println("CommentedID is "+commentID);
+			Assert.assertEquals(addedComment, comment);
+	}
+
+}

@@ -1,0 +1,29 @@
+import static io.restassured.RestAssured.given;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import files.payload;
+import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+
+public class StaticJson {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+		// content of the file from json to string and String to bytes--> byte to string
+RestAssured.baseURI= "https://rahulshettyacademy.com";
+		
+		String resp=given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
+        .body(new String (Files.readAllBytes(Paths.get("post.json")))).when().post("/maps/api/place/add/json") //adding the body from payload
+              .then().assertThat().statusCode(200).extract().response().asString();
+		
+		JsonPath js = new JsonPath(resp); //Jsonpath will convert the raw to json
+	String placeid=	js.getString("place_id");
+	System.out.println(placeid);
+
+	}
+
+}

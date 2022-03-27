@@ -1,0 +1,65 @@
+package SpecBuilder;
+
+import static io.restassured.RestAssured.given;
+
+import org.testng.Assert;
+
+import files.ReUsableMethods;
+import files.payload;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.path.json.JsonPath;
+import io.restassured.specification.RequestSpecification;
+
+
+public class MapsSpecbuilder {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		RestAssured.baseURI= "https://rahulshettyacademy.com";
+		
+		//Using the SpecBuilder
+		RequestSpecification reques= (RequestSpecification) new RequestSpecBuilder()
+				.setBaseUri("https://rahulshettyacademy.com")
+				.addQueryParam("key", "qaclick").addHeader("Content-Type", "application/json");
+
+		
+		RequestSpecification request=given().spec(reques);
+		
+        String Resp=request.body(payload.AddPlace()).when().post("/maps/api/place/add/json") //adding the body from payload
+              .then().assertThat().statusCode(200).extract().response().asString();
+		
+		JsonPath js = new JsonPath(resp); //Jsonpath will convert the raw to json
+	String placeid=	js.getString("place_id");
+	System.out.println(placeid);
+	
+
+     
+    //update the place
+     String expectedAddress= "Dharwad";
+    String putResp= given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
+     .body(payload.updatePlace(placeid, expectedAddress)).when().put("/maps/api/place/update/json")
+     .then().assertThat().statusCode(200).extract().response().asString();
+    
+    
+	//Get method
+	
+	String getres= given().log().all().queryParam("key", "qaclick123").queryParam("place_id", placeid)
+	.when().get("/maps/api/place/get/json")
+	.then().log().all().assertThat().statusCode(200).extract().response().asString();
+	
+      JsonPath js1=	ReUsableMethods.rawToJson(getres);
+     String locationLat= js1.get("location.latitude").toString();
+     String Actualaddress=js1.getString("address");
+     System.out.println("locationlat is"+locationLat);
+     Assert.assertEquals(Actualaddress,expectedAddress );
+     
+     
+     
+    
+	
+	}
+		
+	}
+
+}

@@ -1,0 +1,91 @@
+package StepDefinition;
+
+import static io.restassured.RestAssured.given;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Assert;
+
+import Resources.APIResources;
+import Resources.TestBuildData;
+import Resources.Utils;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+
+public class MapsStepDefinition extends Utils
+{
+	 RequestSpecification	requ;
+	 
+	 ResponseSpecification response;
+	 Response resp;
+	 TestBuildData data= new TestBuildData();
+	 
+	 @Given("the body for addingPlace with {string} {string} {string}")
+	 public void the_body_for_addingPlace_with(String name, String Language, String address) throws Throwable {
+		
+		/*(PojoMaps.PojoMapsClass m= new PojoMaps.PojoMapsClass();
+		m.setAccuracy("50");
+		m.setAddress("Karnataka");
+		m.setLanguage("Kannada");
+		m.setName("abhi");
+		m.setPhone_number("99877767789");
+		m.setWebsite("www.google.com");
+		List<String> typelist= new ArrayList<String>();
+		typelist.add("shoe park");
+		typelist.add("shoe");
+		m.setTypes(typelist);
+		
+		PojoMaps.PojoLocationBody lb= new PojoMaps.PojoLocationBody();
+		lb.setLat(-38.897);
+		lb.setLng(32.7865);
+		
+		
+		m.setLocation(lb);)*/   // This code will be moved to Resource>Testdata class
+		
+		
+		/*(RequestSpecification request =new RequestSpecBuilder().setBasePath("https://rahulshettyacademy.com")
+		.addQueryParam("key", "qaclick123")
+		.addHeader("Content-Type", "application/json").build();)*/ //code will be moved to Resources>util
+				
+       RequestSpecification requ	=	
+    		   given().spec(RequestMethod()).body(data.testData(name, Language, address));
+        
+    }
+	 @When("User send the {string} from {string} method")
+	 public void user_send_the_from_method(String resource, String httpMethod) {
+        
+    	APIResources resourceAPI=APIResources.valueOf(resource);
+    	System.out.println(resourceAPI.getResource());
+    	
+    	 resp= requ.when().post(resourceAPI.getResource())
+    			.then().spec(response).extract().response();
+    }
+
+    @Then("^Place will be created and status will be 200$")
+    public void place_will_be_created_and_status_will_be_200() throws Throwable {
+      
+    	
+        Assert.assertEquals(resp.getStatusCode(), 200);
+    	
+    }
+
+    @And("^\"([^\"]*)\" in response will be \"([^\"]*)\"$")
+    public void something_in_response_will_be_something(String KeyValue, String ExpectedValue) throws Throwable {
+       
+    	String stringRes= resp.asString();
+    	JsonPath js= new JsonPath(stringRes);
+    	Assert.assertEquals(js.getString(KeyValue), ExpectedValue);
+    	
+    }
+
+}

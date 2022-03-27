@@ -1,0 +1,45 @@
+package Serialization;
+
+import io.restassured.RestAssured;
+import net.bytebuddy.description.method.ParameterDescription.Token.TypeList;
+
+import static io.restassured.RestAssured.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.groovy.json.internal.Type;
+
+public class MapsSerialization {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+		PojoMapsClass m= new PojoMapsClass();
+		m.setAccuracy("50");
+		m.setAddress("Karnataka");
+		m.setLanguage("Kannada");
+		m.setName("abhi");
+		m.setPhone_number("99877767789");
+		m.setWebsite("www.google.com");
+		List<String> typelist= new ArrayList<String>();
+		typelist.add("shoe park");
+		typelist.add("shoe");
+		m.setTypes(typelist);
+		
+		PojoLocationBody lb= new PojoLocationBody();
+		lb.setLat(-38.897);
+		lb.setLng(32.7865);
+		
+		m.setLocation(lb);
+		
+	
+		RestAssured.baseURI= "https://rahulshettyacademy.com";
+		given().log().all().queryParam("key", "qaclick123").header("Content-Type", "application/json")
+		.body(m).when().post("/maps/api/place/add/json")
+		.then().log().all().assertThat().statusCode(200);
+
+	}
+
+}

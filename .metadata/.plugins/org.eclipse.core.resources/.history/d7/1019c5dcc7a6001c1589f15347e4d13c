@@ -1,0 +1,55 @@
+package Serialization;
+
+import io.restassured.RestAssured;
+import io.restassured.builder.*;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import net.bytebuddy.description.method.ParameterDescription.Token.TypeList;
+
+import static io.restassured.RestAssured.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.groovy.json.internal.Type;
+
+public class MapsSerialization {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		
+		PojoMapsClass m= new PojoMapsClass();
+		m.setAccuracy("50");
+		m.setAddress("Karnataka");
+		m.setLanguage("Kannada");
+		m.setName("abhi");
+		m.setPhone_number("99877767789");
+		m.setWebsite("www.google.com");
+		List<String> typelist= new ArrayList<String>();
+		typelist.add("shoe park");
+		typelist.add("shoe");
+		m.setTypes(typelist);
+		
+		PojoLocationBody lb= new PojoLocationBody();
+		lb.setLat(-38.897);
+		lb.setLng(32.7865);
+		
+		m.setLocation(lb);
+		
+		RestAssured.baseURI= "https://rahulshettyacademy.com";
+		
+		RequestSpecification request =new RequestSpecBuilder().setBasePath("https://rahulshettyacademy.com")
+		.addQueryParam("key", "qaclick123").addHeader("Content-Type", "application/json").build();
+		
+       ResponseSpecification response= new ResponseSpecBuilder().expectStatusCode(200).build();
+	
+		
+       RequestSpecification	requ=	given().spec(request).body(m);
+			
+    String resp= requ.when().post("/maps/api/place/add/json")
+		.then().spec(response).extract().response().asString();
+
+	}
+
+}

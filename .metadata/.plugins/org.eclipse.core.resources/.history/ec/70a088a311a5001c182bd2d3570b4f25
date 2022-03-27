@@ -1,0 +1,10 @@
+package jiraAPi;
+
+public class JiraApi {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

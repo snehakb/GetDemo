@@ -1,0 +1,65 @@
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import files.ReUsableMethods;
+import files.payload;
+import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+
+import static io.restassured.RestAssured.*;
+
+public class DynamicJson {
+
+	//Usual method
+	@Test
+	//public static void main(String[] args)
+	public void addbook()
+	{
+		 RestAssured.baseURI="http://216.10.245.166";
+		 String resp=given().log().all().header("Content-Type", "application/json")
+		.body(payload.addbook())
+		.when().post("/Library/Addbook.php")
+		.then().log().all().assertThat().statusCode(200).extract().response().asString();
+		
+		JsonPath js=ReUsableMethods.rawToJson(resp);
+		String id =js.getString("ID");
+	System.out.println(id);
+	
+	}
+// by sending the parameter in the method
+	@Test
+	public void addbookParameter()
+		 RestAssured.baseURI="http://216.10.245.166";
+		 String resp1=given().log().all().header("Content-Type", "application/json")
+		.body(payload.addbookparametr("bmder","5686"))   //sending the parameter
+		.when().post("/Library/Addbook.php")
+		.then().log().all().assertThat().statusCode(200).extract().response().asString();
+		
+		JsonPath js1=ReUsableMethods.rawToJson(resp1);
+		String id1 =js1.getString("ID");
+	System.out.println(id1);
+	}
+	
+
+//using Data provider
+@Test(dataProvider = "addbookArray")
+public void addbookDataParameter()
+{
+	 RestAssured.baseURI="http://216.10.245.166";
+	 String resp1=given().log().all().header("Content-Type", "application/json")
+	.body(payload.addbookparametr("bmder","5686"))   //sending the parameter
+	.when().post("/Library/Addbook.php")
+	.then().log().all().assertThat().statusCode(200).extract().response().asString();
+	
+	JsonPath js1=ReUsableMethods.rawToJson(resp1);
+	String id1 =js1.getString("ID");
+System.out.println(id1);
+}
+	
+@DataProvider(name="addbookArray")
+public void dataProvider()
+{
+	
+
+}
+}
