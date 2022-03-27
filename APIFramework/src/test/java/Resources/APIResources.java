@@ -9,7 +9,7 @@ public enum APIResources {
 	DeletePlaceAPI("maps/api/place/delete/json");
 	
 	private String resource;
-
+//sneha 
 	APIResources(String resource) {
 		this.resource=resource;
 	}
